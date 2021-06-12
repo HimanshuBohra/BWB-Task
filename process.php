@@ -2,10 +2,9 @@
 
 include './classes/user.php';
 include 'dbProcessor.php';
-$target_dir = 'data/';
 if (isset($_POST["import"])) {
     
-        $fileName = $target_dir .  basename($_FILES["fileToUpload"]["name"]);
+        $fileName =$_FILES["fileToUpload"]["name"];
 
     $row = 1;
 
