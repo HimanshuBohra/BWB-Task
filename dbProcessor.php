@@ -100,8 +100,10 @@ function checkifDuplicatePhonenumber($Phone_number){
 
 function insertToUser($users){
     global $conn;
-    $stmt = $conn->prepare("INSERT INTO user (`user_name`,`user_email`,`user_gender`,`user_dob`,`address_home`,`address_work`,`address_other`,`user_mobile`) VALUES (?, ?, ? , ? , ? , ? , ? , ?)");
-    $stmt->bind_param('ssssssss',$name,$email,$gender,$dob,$add_home,$add_work,$add_other,$mobile);
+    // $stmt = $conn->prepare("INSERT INTO user (`user_name`,`user_email`,`user_gender`,`user_dob`,`address_home`,`address_work`,`address_other`,`user_mobile`) VALUES (?, ?, ? , ? , ? , ? , ? , ?)");
+    // $sql = "INSERT INTO user (`user_name`,`user_email`,`user_gender`,`user_dob`,`address_home`,`address_work`,`address_other`,`user_mobile`) VALUES ";        
+    // $stmt->bind_param('ssssssss',$name,$email,$gender,$dob,$add_home,$add_work,$add_other,$mobile);
+    //$sql = "INSERT INTO user (`user_name`,`user_email`,`user_gender`,`user_dob`,`address_home`,`address_work`,`address_other`,`user_mobile`) VALUES ";
     $sql = "";
     foreach($users as $user){
         $name = $user->getFirst_name()." ".$user->getLast_name();
@@ -112,17 +114,22 @@ function insertToUser($users){
         $add_home = $user->getAddress_home();
         $add_work = $user->getAddress_work();
         $add_other = $user->getAddress_other();
-        //$sql = $sql."INSERT INTO user (`user_name`,`user_email`,`user_gender`,`user_dob`,`address_home`,`address_work`,`address_other`,`user_mobile`) VALUES ('".$name."','".$email."','".$gender."','".$dob."','".$add_home."','".$add_work."','".$add_other."','".$mobile."');";        
-       $stmt->execute();
+        $sql = $sql."INSERT INTO user (`user_name`,`user_email`,`user_gender`,`user_dob`,`address_home`,`address_work`,`address_other`,`user_mobile`) VALUES ('".$name."','".$email."','".$gender."','".$dob."','".$add_home."','".$add_work."','".$add_other."','".$mobile."');";        
+       //$sql = $sql." ('".$name."','".$email."','".$gender."','".$dob."','".$add_home."','".$add_work."','".$add_other."','".$mobile."'), ";
+        // $stmt->execute();
     }
- /*  mysqli_multi_query($conn,$sql);
+    $sql[strlen($sql)-2] = ';';
+    //echo $sql;
+    /*if(!mysqli_query($conn,$sql)){
+        echo mysqli_error($conn);
+    }*/
+   mysqli_multi_query($conn,$sql);
      $result = $conn->multi_query($sql);
     if(!$result){
         echo "Error executing query: (" . $conn->errno . ") " . $conn->error;
     }
     if (mysqli_multi_query($conn, $sql)) {
         do {
-             store first result set 
             if ($result = mysqli_store_result($conn)) {
                 while ($row = mysqli_fetch_row($result)) {
                     printf("%s\n", $row[0]);
@@ -134,14 +141,14 @@ function insertToUser($users){
             }
         } while (mysqli_next_result($conn));
     }
-    */
+    
 }
 
 function insertToUserError($users){
     global $conn;
 
-    $stmt = $conn->prepare("INSERT INTO user_error (user_name,user_email,user_gender,user_dob,address_home,address_work,address_other,user_mobile,error_message) VALUES (?, ?, ? , ? , ? , ? , ? , ?, ?)");
-    $stmt->bind_param("sssssssss",$name,$email,$gender,$dob,$add_home,$add_work,$add_other,$mobile,$error_message); 
+    // $stmt = $conn->prepare("INSERT INTO user_error (user_name,user_email,user_gender,user_dob,address_home,address_work,address_other,user_mobile,error_message) VALUES (?, ?, ? , ? , ? , ? , ? , ?, ?)");
+    // $stmt->bind_param("sssssssss",$name,$email,$gender,$dob,$add_home,$add_work,$add_other,$mobile,$error_message); 
     $sql = "";
     foreach($users as $user){
         $name = $user->getFirst_name()." ".$user->getLast_name();
@@ -153,14 +160,14 @@ function insertToUserError($users){
         $add_work = $user->getAddress_work();
         $add_other = $user->getAddress_other();
         $error_message = $user->getError_messages();
-        //$sql = $sql." INSERT INTO user_error (`user_name`,`user_email`,`user_gender`,`user_dob`,`address_home`,`address_work`,`address_other`,`user_mobile`,`error_message`) VALUES ('".$name."','".$email."','".$gender."','".$dob."','".$add_home."','".$add_work."','".$add_other."','".$mobile."','".$error_message."');";  
-        $stmt->execute();
+        $sql = $sql." INSERT INTO user_error (`user_name`,`user_email`,`user_gender`,`user_dob`,`address_home`,`address_work`,`address_other`,`user_mobile`,`error_message`) VALUES ('".$name."','".$email."','".$gender."','".$dob."','".$add_home."','".$add_work."','".$add_other."','".$mobile."','".$error_message."');";  
+     //   $stmt->execute();
     }
-    mysqli_multi_query($conn,$sql);
-    /*$result = $conn->multi_query($sql);
+  //  mysqli_multi_query($conn,$sql);
+    $result = $conn->multi_query($sql);
     if(!$result){
         echo "Error executing query: (" . $conn->errno . ") " . $conn->error;
-    }*/
+    }
 }
 
 function showGoodusers(){
