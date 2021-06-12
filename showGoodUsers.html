@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+        th, td, p, input {
+            font:14px Verdana;
+        }
+        table, th, td 
+        {
+            border: solid 1px #DDD;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+        }
+        th {
+            font-weight:bold;
+        }
+    </style>
+    </head>
+    <body onload="CreateTableFromJSON()">
+        <p id="showData">
+            <table id="fillData">
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Gender
+                    </th>
+                    <th>
+                        Date Of Birth
+                    </th>
+                    <th>
+                        Address(home)
+                    </th>
+                    <th>
+                        Address(work)
+                    </th>
+                    <th>
+                        Address(other)
+                    </th>
+                    <th>
+                        Phone Number
+                    </th>
+                </tr>
+        </table>
+        <button id="showData" onclick=getnextTenfortable()>Click for More Data</button>
+    </p>
+    </body>
+    <script>
+        var tablesize = 0;
+        function CreateTableFromJSON(){
+            $.ajax({
+                    type: "POST",
+                    url: 'goodUsers.php',
+                    data: {'flag': '0' , 'next' : '10'},
+                    success: function(data){
+                        var result = JSON.parse(data);
+                        tablesize = result.length;
+                        var trHTML = '';
+                        $.each(result, function (i, user) {
+                            trHTML += '<tr><td>' + user.user_name + '</td><td>' + user.user_email + '</td><td>' + user.user_gender + '</td><td>' + user.user_dob + '</td><td>' + user.address_home + '</td><td>' + user.address_work + '</td><td>' + user.address_other + '</td><td>' + user.user_mobile + '</td></tr>';
+                        });
+                        $('#fillData').append(trHTML);
+                        console.log(result[0]['user_name']);
+                    },
+                    error: function(xhr, status, error){
+                        console.error(xhr);
+                    }
+            });
+        }
+        function getnextTenfortable(){
+
+            $.ajax({
+                    type: "POST",
+                    url: 'goodUsers.php',
+                    data: {'flag': '1' , 'next' : tablesize},
+                    success: function(data){
+                        var result = JSON.parse(data);
+                        tablesize+=result.length;
+                        var trHTML = '';
+                        $.each(result, function (i, user) {
+                            trHTML += '<tr><td>' + user.user_name + '</td><td>' + user.user_email + '</td><td>' + user.user_gender + '</td><td>' + user.user_dob + '</td><td>' + user.address_home + '</td><td>' + user.address_work + '</td><td>' + user.address_other + '</td><td>' + user.user_mobile + '</td></tr>';
+                        });
+                        $('#fillData').append(trHTML);
+                        console.log(result[0]['user_name']);
+                    },
+                    error: function(xhr, status, error){
+                        console.error(xhr);
+                    }
+            });
+        }
+    </script>
+</html>
